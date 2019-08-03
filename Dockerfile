@@ -13,6 +13,14 @@ ADD docker-mariadb/10.0/supervisor/mariadb.conf /etc/supervisor/conf.d/
 # comment out this line if you want to use default mirror
 ADD trusty/sources.list /etc/apt/sources.list
 
+# Configure user nobody to match unRAID's settings (99:100) and add mysql user to users group
+RUN \
+usermod -u 99 nobody && \
+usermod -g 100 nobody && \
+usermod -d /var/www nobody && \
+usermod -a -G users mysql && \
+chown -R nobody:users /var/www
+
 # Create required directories
 RUN mkdir /docker-entrypoint-initdb.d
 
